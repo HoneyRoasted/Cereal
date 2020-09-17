@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group 'honeyroasted.cereal'
+version '0.0.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation("com.github.HoneyRoasted:JavaType:9fe00ce86a")
+}
+
+task fatJar(type: Jar) {
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    from sourceSets.main.java
+
+    classifier("fat")
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+
+    classifier("javadoc")
+}
+
+task jars
+jars.dependsOn clean
+jars.dependsOn jar
+jars.dependsOn fatJar
+jars.dependsOn javadocJar
